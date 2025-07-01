@@ -29,7 +29,7 @@ async def ask_ai(data: AskRequest):
     instrument = data.instrument.lower().strip()
     question = data.question.strip()
 
-    manual_path = f"manuals/{instrument}.txt"
+    manual_path = f"{instrument}.txt"
 
     if not os.path.exists(manual_path):
         return {"answer": f"Manual for '{instrument}' not found."}
