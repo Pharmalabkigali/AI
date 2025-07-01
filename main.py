@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
@@ -41,7 +42,7 @@ You are a helpful biomedical engineering assistant. Use the following service ma
 
 Service Manual Content:
 \"\"\"
-{manual_text[:3000]}  # Limit content sent to avoid token limit
+{manual_text[:3000]}
 \"\"\"
 
 User Question:
@@ -63,3 +64,15 @@ Answer:
 
     except Exception as e:
         return {"answer": f"❌ Error calling OpenAI: {str(e)}"}
+
+@app.get("/", response_class=HTMLResponse)
+def read_root():
+    return """
+    <h2>✅ PharmaLab AI Assistant Backend is Running</h2>
+    <p>You can send a POST request to <code>/ask</code> with instrument and question.</p>
+    <p>Example JSON body:</p>
+    <pre>{
+  "instrument": "humacount5",
+  "question": "How to reset the device?"
+}</pre>
+    """
