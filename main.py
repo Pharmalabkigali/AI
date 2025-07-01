@@ -54,13 +54,16 @@ Answer:
 """
 
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=300,
-            temperature=0.4,
-        )
-        return {"answer": response['choices'][0]['message']['content'].strip()}
+        client = openai.OpenAI()  # initialize the client
+
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": prompt}],
+    max_tokens=300,
+    temperature=0.4,
+)
+
+return {"answer": response.choices[0].message.content.strip()}
 
     except Exception as e:
         return {"answer": f"❌ Error calling OpenAI: {str(e)}"}
