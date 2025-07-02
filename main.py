@@ -43,7 +43,7 @@ You are a helpful biomedical technician assistant. Use the following service man
 
 Manual:
 \"\"\"
-{manual_text[:25000]}
+{manual_text[:8000]}
 \"\"\"
 
 Question:
