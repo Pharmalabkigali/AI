@@ -3,31 +3,29 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
-import openai
+from groq import Groq
 
 # Load environment variables
 load_dotenv()
 
-# Initialize OpenAI client with your API key
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Get API Key
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# FastAPI app
+# Initialize FastAPI app
 app = FastAPI()
 
-# Enable CORS for frontend access
+# Allow frontend to access backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Use your domain here for security in production
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Define request model
 class AskRequest(BaseModel):
     instrument: str
     question: str
 
-# Define route
 @app.post("/ask")
 async def ask_ai(data: AskRequest):
     instrument = data.instrument.lower().strip()
@@ -40,16 +38,15 @@ async def ask_ai(data: AskRequest):
     with open(manual_path, "r", encoding="utf-8") as f:
         manual_text = f.read()
 
-    # Prompt for AI
     prompt = f"""
-You are a helpful biomedical engineering assistant. Use the following service manual to answer the user's question.
+You are a helpful biomedical technician assistant. Use the following service manual to answer the user's question.
 
-Service Manual:
+Manual:
 \"\"\"
 {manual_text[:3000]}
 \"\"\"
 
-User Question:
+Question:
 \"\"\"
 {question}
 \"\"\"
@@ -59,12 +56,11 @@ Answer:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="mistral-7b-8k",  # You can also use mixtral-8x7b
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=300,
-            temperature=0.4
+            temperature=0.4,
+            max_tokens=300
         )
         return {"answer": response.choices[0].message.content.strip()}
-
     except Exception as e:
-        return {"answer": f"❌ Error calling OpenAI: {str(e)}"}
+        return {"answer": f"❌ Error using Groq/Mistral: {str(e)}"}
