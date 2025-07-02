@@ -12,3 +12,56 @@ error 1201, It is a Fatal HGB error: HGB channel did not give a ready signal.Rem
 error 1404 , It means "Paper width is too large".Remedy: Adjust printer paper size settings in the Settings/Printer setup submenu.
 error 1921 , error says: "%s sensor calibration failed."Reason: Empty reagent container or bubbles in tubes.Remedy: Replace with a full container and recalibrate.
 error 1922 ,"Blood detector calibration failed."Reason: Empty diluent or bubbles in sample needle.Remedy: Replace container, recalibrate, check tubing.
+Calibration Procedure are as follows
+Access Calibration Menu:
+
+Go to the Service Menu (enter access code 6484).
+
+Select "Calibration."
+
+Choose Parameter to Calibrate:
+
+Options may include RBC, WBC, HGB, PLT, etc.
+
+Enter Calibration Factors:
+
+Use the formula:Measured Value = FactUser × FactService × Raw Value
+
+You may adjust either User or Service factors as needed.
+
+Apply Calibration:
+
+Use the "Apply Calibration" option to update values.
+
+Use "Apply User Calibration" to normalize user factors to 1.00.
+
+Verify:
+
+Run known control samples to verify calibration accuracy.
+how to perform quality control on the Humacount 5 follow these steps:
+
+Prepare QC Material:
+
+Use appropriate hematology control material (e.g., low, normal, high levels).
+
+Mix gently by inverting. Do not shake vigorously.
+
+Run QC Samples:
+
+Use standard sample mode.
+
+Run each level as if it's a patient sample.
+
+Review Results:
+
+Compare results with expected target values and acceptable ranges provided by the control manufacturer.
+
+Interpret & Respond:
+
+If within range: continue routine use.
+
+If out of range: check calibration, reagents, sample prep, or instrument function.
+
+Document:
+
+Record results, time, lot number, and any corrective actions.
