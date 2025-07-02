@@ -56,7 +56,7 @@ Answer:
 
     try:
         response = client.chat.completions.create(
-            model="mixtral-8x7b-32768",  # ✅ supported Groq model
+            model="llama3-70b-8192",  # ✅ supported Groq model
 
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
