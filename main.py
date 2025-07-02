@@ -43,7 +43,7 @@ You are a helpful biomedical technician assistant. Use the following service man
 
 Manual:
 \"\"\"
-{manual_text[:3000]}
+{manual_text[:25000]}
 \"\"\"
 
 Question:
@@ -60,7 +60,7 @@ Answer:
 
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
-            max_tokens=300
+            max_tokens=600
         )
         return {"answer": response.choices[0].message.content.strip()}
     except Exception as e:
