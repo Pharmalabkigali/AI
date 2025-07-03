@@ -1,20 +1,21 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 from groq import Groq
 
-# Load .env variables
+# Load environment variables
 load_dotenv()
 
-# Initialize Groq Client
+# Initialize Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Initialize FastAPI app
 app = FastAPI()
 
-# CORS middleware
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Request body schemas
+# Data models
 class AskRequest(BaseModel):
     instrument: str
     question: str
@@ -42,12 +43,15 @@ async def login_user(data: LoginRequest):
     elif role == "client" and code == "CL2025":
         return {"role": "client"}
     else:
-        return {"error": "Invalid role or access code."}
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Invalid role or access code."}
+        )
 
 # AI ASSISTANT ENDPOINT
 @app.post("/ask")
 async def ask_ai(data: AskRequest):
-    instrument = data.instrument.lower().strip()
+    instrument = os.path.basename(data.instrument.lower().strip())
     question = data.question.strip()
     manual_path = f"manuals/{instrument}.txt"
 
@@ -57,21 +61,15 @@ async def ask_ai(data: AskRequest):
     with open(manual_path, "r", encoding="utf-8") as f:
         manual_text = f.read()
 
-    prompt = f"""
-You are a helpful biomedical technician assistant. Use the following service manual to answer the user's question.
+    prompt = f"""You are a helpful biomedical technician assistant. Use the following service manual to answer the user's question.
 
 Manual:
-"""
 {manual_text[:8000]}
-"""
 
 Question:
-"""
 {question}
-"""
 
-Answer:
-"""
+Answer:"""
 
     try:
         response = client.chat.completions.create(
@@ -81,6 +79,5 @@ Answer:
             max_tokens=600
         )
         return {"answer": response.choices[0].message.content.strip()}
-
     except Exception as e:
         return {"answer": f"❌ Error using Groq/Mistral: {str(e)}"}
