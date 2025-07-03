@@ -35,12 +35,15 @@ class LoginRequest(BaseModel):
 # LOGIN ENDPOINT
 @app.post("/login")
 async def login_user(data: LoginRequest):
+    print("LOGIN ATTEMPT:", data.role, data.code)  # <--- Add this
+
     if data.role.lower() == "pharmalab" and data.code == "PL2025":
         return {"role": "pharmalab"}
     elif data.role.lower() == "client" and data.code == "CL2025":
         return {"role": "client"}
     else:
         return {"error": "Invalid role or access code."}
+
 
 
 # AI ASSISTANT ENDPOINT
